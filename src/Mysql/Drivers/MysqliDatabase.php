@@ -63,7 +63,7 @@ class MysqliDatabase
      */
     public function executeFile($filepath)
     {
-
+        return $this->executeMultiple(\file_get_contents($filepath));
     }
 
     /**
