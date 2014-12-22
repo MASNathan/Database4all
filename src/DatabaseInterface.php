@@ -6,6 +6,13 @@ interface DatabaseInterface
 {
 
     /**
+     * Escapes a string
+     * @param  string $string String to escape
+     * @return string         Escaped string
+     */
+    public function escape($string);
+
+    /**
      * Executes a query
      * @param  string $sql SQL query
      * @return boolean     True if successful, False if not

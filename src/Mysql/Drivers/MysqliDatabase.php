@@ -33,6 +33,16 @@ class MysqliDatabase
     }
 
     /**
+     * Escapes a string
+     * @param  string $string String to escape
+     * @return string         Escaped string
+     */
+    public function escape($string)
+    {
+        return $this->database->real_escape_string($string);
+    }
+
+    /**
      * Executes a query
      * @param  string $sql SQL query
      * @return boolean     True if successful, False if not

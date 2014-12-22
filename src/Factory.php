@@ -8,6 +8,7 @@ use MASNathan\Database4all\Mysql\Drivers\MysqliDatabase;
 // SQLite Drivers
 use MASNathan\Database4all\Sqlite\Configuration as SqliteConfiguration;
 use MASNathan\Database4all\Sqlite\Drivers\PdoDatabase as SqlitePdoDatabase;
+use MASNathan\Database4all\Sqlite\Drivers\Sqlite3Database;
 
 class Factory
 {
@@ -44,7 +45,7 @@ class Factory
     {
         switch (get_class($config)) {
             case 'MASNathan\Database4all\Mysql\Configuration':
-                if (class_exists('PDO')) {
+                if (class_exists('PDO') && in_array('mysql', \PDO::getAvailableDrivers())) {
                     return new MysqlPdoDatabase($config);
                 }
 
@@ -55,8 +56,12 @@ class Factory
                 throw new \Exception("None of the supported drivers for MySQL is installed.");
 
             case 'MASNathan\Database4all\Sqlite\Configuration':
-                if (class_exists('PDO')) {
+                if (class_exists('PDO') && in_array('sqlite', \PDO::getAvailableDrivers())) {
                     return new SqlitePdoDatabase($config);
+                }
+
+                if (class_exists('SQLite3')) {
+                    return new Sqlite3Database($config);
                 }
 
                 throw new \Exception("None of the supported drivers for SQLite is installed.");

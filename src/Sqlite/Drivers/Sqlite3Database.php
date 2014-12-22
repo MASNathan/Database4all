@@ -4,13 +4,13 @@ namespace MASNathan\Database4all\Sqlite\Drivers;
 use MASNathan\Database4all\DatabaseInterface;
 use MASNathan\Database4all\Sqlite\Configuration;
 
-class PdoDatabase
+class Sqlite3Database
     implements DatabaseInterface
 {
 
     /**
      * Database holder
-     * @var \PDO
+     * @var \SQLite3
      */
     protected $database;
 
@@ -20,12 +20,16 @@ class PdoDatabase
      */
     public function __construct(Configuration $config)
     {
-        $connectionString = sprintf("sqlite:%s", $config->filepath);
-        $connectioOptions = array(\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES ' . $config->charset);
-        $this->database = new \PDO($connectionString, null /* user */, null /* pass */, $connectioOptions);
+        $this->database = new \SQLite3($config->filepath);
         /**
          * @todo  Check if connection is ok
+         * @todo  Check how the charset can be changed
          */
+    }
+
+    public function __destruct()
+    {
+        $this->database->close();
     }
 
     /**
@@ -35,7 +39,7 @@ class PdoDatabase
      */
     public function escape($string)
     {
-        return $this->database->quote($string);
+        return $this->database->escapeString($string);
     }
 
     /**
@@ -45,7 +49,7 @@ class PdoDatabase
      */
     public function execute($sql)
     {
-        return (bool) $this->database->exec($sql);
+        return (bool) @$this->database->exec($sql);
     }
     
     /**
@@ -77,7 +81,7 @@ class PdoDatabase
     {
         $result = $this->database->query($sql);
         if ($result) {
-            return new PdoResult($result);
+            return new Sqlite3Result($result);
         }
         return false;
     }
@@ -88,8 +92,7 @@ class PdoDatabase
      */
     public function getLastErrorCode()
     {
-        $errorInfo = $this->database->errorInfo();
-        return $errorInfo[1];
+        return $this->database->lastErrorCode();
     }
 
     /**
@@ -98,8 +101,7 @@ class PdoDatabase
      */
     public function getLastErrorMessage()
     {
-        $errorInfo = $this->database->errorInfo();
-        return $errorInfo[2];
+        return $this->database->lastErrorMsg();
     }
 
     /**
@@ -108,6 +110,6 @@ class PdoDatabase
      */
     public function getLastInsertId()
     {
-        return (int) $this->database->lastInsertId();
+        return (int) $this->database->lastInsertRowID();
     }
 }
