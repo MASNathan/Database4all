@@ -1,0 +1,19 @@
+{
+    "name": "masnathan/database4all",
+    "description": "Database abstraction class",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "André Filipe",
+            "email": "andre.r.flip@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "MASNathan\\Database4all\\": "src/"
+        }
+    },
+    "require-dev": {
+        "symfony/var-dumper": "*"
+    }
+}
