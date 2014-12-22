@@ -35,7 +35,7 @@ class PdoDatabase
      */
     public function execute($sql)
     {
-
+        return (bool) $this->database->exec($sql);
     }
     
     /**
@@ -65,7 +65,11 @@ class PdoDatabase
      */
     public function query($sql)
     {
-
+        $result = $this->database->query($sql);
+        if ($result) {
+            return new PdoResult($result);
+        }
+        return false;
     }
 
     /**
@@ -74,7 +78,8 @@ class PdoDatabase
      */
     public function getLastErrorCode()
     {
-
+        $errorInfo = $this->database->errorInfo();
+        return $errorInfo[1];
     }
 
     /**
@@ -83,7 +88,8 @@ class PdoDatabase
      */
     public function getLastErrorMessage()
     {
-
+        $errorInfo = $this->database->errorInfo();
+        return $errorInfo[2];
     }
 
     /**
@@ -92,6 +98,6 @@ class PdoDatabase
      */
     public function getLastInsertId()
     {
-
+        return (int) $this->database->lastInsertId();
     }
 }

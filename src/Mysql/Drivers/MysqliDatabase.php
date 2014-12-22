@@ -27,6 +27,11 @@ class MysqliDatabase
         $this->database->set_charset($config->charset);
     }
 
+    public function __destruct()
+    {
+        $this->database->close();
+    }
+
     /**
      * Executes a query
      * @param  string $sql SQL query
@@ -34,7 +39,11 @@ class MysqliDatabase
      */
     public function execute($sql)
     {
+        if ($this->database->query($sql) === true) {
+            return true;
+        }
 
+        return false;
     }
     
     /**
@@ -64,7 +73,11 @@ class MysqliDatabase
      */
     public function query($sql)
     {
-
+        $result = $this->database->query($sql);
+        if ($result) {
+            return new MysqliResult($result);
+        }
+        return false;
     }
 
     /**
@@ -73,7 +86,7 @@ class MysqliDatabase
      */
     public function getLastErrorCode()
     {
-
+        return $this->database->errno;
     }
 
     /**
@@ -82,7 +95,7 @@ class MysqliDatabase
      */
     public function getLastErrorMessage()
     {
-
+        return $this->database->error;
     }
 
     /**
@@ -91,6 +104,6 @@ class MysqliDatabase
      */
     public function getLastInsertId()
     {
-
+        return $this->database->insert_id;
     }
 }
