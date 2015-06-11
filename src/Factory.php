@@ -10,14 +10,15 @@
  */
 
 namespace MASNathan\Database4all;
+
 // MySQL Drivers
-use MASNathan\Database4all\Mysql\Configuration as MysqlConfiguration;
-use MASNathan\Database4all\Mysql\Drivers\PdoDatabase as MysqlPdoDatabase;
-use MASNathan\Database4all\Mysql\Drivers\MysqliDatabase;
+use MASNathan\Database4all\Drivers\Mysql\Configuration as MysqlConfiguration;
+use MASNathan\Database4all\Drivers\Mysql\Pdo\Database as MysqlPdoDatabase;
+use MASNathan\Database4all\Drivers\Mysql\Mysqli\Database as MysqliDatabase;
 // SQLite Drivers
-use MASNathan\Database4all\Sqlite\Configuration as SqliteConfiguration;
-use MASNathan\Database4all\Sqlite\Drivers\PdoDatabase as SqlitePdoDatabase;
-use MASNathan\Database4all\Sqlite\Drivers\Sqlite3Database;
+use MASNathan\Database4all\Drivers\Sqlite\Configuration as SqliteConfiguration;
+use MASNathan\Database4all\Drivers\Sqlite\Pdo\Database as SqlitePdoDatabase;
+use MASNathan\Database4all\Drivers\Sqlite\Sqlite3\Database as Sqlite3Database;
 
 class Factory
 {
@@ -29,7 +30,7 @@ class Factory
      * @param string $name Database Name
      * @return MysqlConfiguration
      */
-    static public function getMysqlConfiguration($host, $user, $pass, $name)
+    public static function getMysqlConfiguration($host, $user, $pass, $name)
     {
         return new MysqlConfiguration($host, $user, $pass, $name);
     }
@@ -39,7 +40,7 @@ class Factory
      * @param string $filepath Path to the database file
      * @return SqliteConfiguration
      */
-    static public function getSqliteConfiguration($filepath)
+    public static function getSqliteConfiguration($filepath)
     {
         return new SqliteConfiguration($filepath);
     }
@@ -49,7 +50,7 @@ class Factory
      * @param  Configuration $config Database Configuration
      * @return DatabaseInterface
      */
-    static public function getDatabase(Configuration $config)
+    public static function getDatabase(Configuration $config)
     {
         switch (get_class($config)) {
             case 'MASNathan\Database4all\Mysql\Configuration':

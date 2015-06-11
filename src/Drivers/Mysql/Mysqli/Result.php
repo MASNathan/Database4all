@@ -9,19 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace MASNathan\Database4all\Sqlite\Drivers;
-use MASNathan\Database4all\Result;
+namespace MASNathan\Database4all\Drivers\Mysql\Mysqli;
 
-class PdoResult extends Result
+use MASNathan\Database4all\Result as ResultParent;
+
+class Result extends ResultParent
 {
-    public function __construct(\PDOStatement $dataResult)
+    public function __construct(\mysqli_result $dataResult)
     {
         parent::__construct($dataResult);
 
-        /**
-         * @todo hanlde PDO bug that won't return the row count as it's supposed
-         */
-        $this->rows = $this->dataResult->rowCount();
+        $this->rows = $this->dataResult->num_rows;
     }
 
     /**
@@ -30,7 +28,7 @@ class PdoResult extends Result
      */
     protected function fetchOneAssoc()
     {
-        return $this->dataResult->fetch(\PDO::FETCH_ASSOC);
+        return $this->dataResult->fetch_assoc();
     }
     
     /**
@@ -39,7 +37,7 @@ class PdoResult extends Result
      */
     protected function fetchOneObject()
     {
-        return $this->dataResult->fetch(\PDO::FETCH_OBJ);
+        return $this->dataResult->fetch_object();
     }
 
     /**
@@ -62,7 +60,7 @@ class PdoResult extends Result
      */
     protected function fetchAllAssoc()
     {
-        return $this->dataResult->fetchALL(\PDO::FETCH_ASSOC);
+        return $this->dataResult->fetch_all(MYSQLI_ASSOC);
     }
     
     /**
@@ -71,7 +69,11 @@ class PdoResult extends Result
      */
     protected function fetchAllObject()
     {
-        return $this->dataResult->fetchALL(\PDO::FETCH_OBJ);
+        $data = array();
+        while ($row = $this->fetchOneObject()) {
+            $data[] = $row;
+        }
+        return $data;
     }
 
     /**

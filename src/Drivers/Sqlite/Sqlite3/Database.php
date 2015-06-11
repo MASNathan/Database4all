@@ -9,31 +9,34 @@
  * file that was distributed with this source code.
  */
 
-namespace MASNathan\Database4all\Sqlite\Drivers;
-use MASNathan\Database4all\DatabaseInterface;
-use MASNathan\Database4all\Sqlite\Configuration;
+namespace MASNathan\Database4all\Drivers\Sqlite\Sqlite3;
 
-class PdoDatabase implements DatabaseInterface
+use MASNathan\Database4all\Database as BaseDatabase;
+use MASNathan\Database4all\Drivers\Sqlite\Configuration;
+
+class Database extends BaseDatabase
 {
-
-    /**
-     * Database holder
-     * @var \PDO
-     */
-    protected $database;
-
     /**
      * PDO Database Connection initialization method
      * @param Configuration $config
      */
     public function __construct(Configuration $config)
     {
-        $connectionString = sprintf("sqlite:%s", $config->filepath);
-        $connectioOptions = array(\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES ' . $config->charset);
-        $this->database = new \PDO($connectionString, null /* user */, null /* pass */, $connectioOptions);
+        $sqliteConnection = new \SQLite3($config->filepath);
         /**
          * @todo  Check if connection is ok
+         * @todo  Check how the charset can be changed
          */
+        $this->setConnection($sqliteConnection);
+    }
+
+    /**
+     * Closes the database connection
+     * @return null
+     */
+    public function close()
+    {
+        $this->database->close();
     }
 
     /**
@@ -43,7 +46,7 @@ class PdoDatabase implements DatabaseInterface
      */
     public function escape($string)
     {
-        return $this->database->quote($string);
+        return $this->database->escapeString($string);
     }
 
     /**
@@ -53,7 +56,7 @@ class PdoDatabase implements DatabaseInterface
      */
     public function execute($sql)
     {
-        return (bool) $this->database->exec($sql);
+        return (bool) @$this->database->exec($sql);
     }
     
     /**
@@ -85,7 +88,7 @@ class PdoDatabase implements DatabaseInterface
     {
         $result = $this->database->query($sql);
         if ($result) {
-            return new PdoResult($result);
+            return new Result($result);
         }
         return false;
     }
@@ -96,8 +99,7 @@ class PdoDatabase implements DatabaseInterface
      */
     public function getLastErrorCode()
     {
-        $errorInfo = $this->database->errorInfo();
-        return $errorInfo[1];
+        return $this->database->lastErrorCode();
     }
 
     /**
@@ -106,8 +108,7 @@ class PdoDatabase implements DatabaseInterface
      */
     public function getLastErrorMessage()
     {
-        $errorInfo = $this->database->errorInfo();
-        return $errorInfo[2];
+        return $this->database->lastErrorMsg();
     }
 
     /**
@@ -116,6 +117,6 @@ class PdoDatabase implements DatabaseInterface
      */
     public function getLastInsertId()
     {
-        return (int) $this->database->lastInsertId();
+        return (int) $this->database->lastInsertRowID();
     }
 }

@@ -6,11 +6,11 @@
 
 namespace MASNathan\Database4all;
 
-use MASNathan\Database4all\Mysql\Configuration as MysqlConfiguration;
-use MASNathan\Database4all\Mysql\Drivers\PdoDatabase;
-use MASNathan\Database4all\Mysql\Drivers\MysqliDatabase;
-use MASNathan\Database4all\Sqlite\Configuration as SqliteConfiguration;
-use MASNathan\Database4all\Sqlite\Drivers\Sqlite3Database;
+use MASNathan\Database4all\Drivers\Mysql\Configuration as MysqlConfiguration;
+use MASNathan\Database4all\Drivers\Mysql\Pdo\Database as PdoDatabase;
+use MASNathan\Database4all\Drivers\Mysql\Mysqli\Database as MysqliDatabase;
+use MASNathan\Database4all\Drivers\Sqlite\Configuration as SqliteConfiguration;
+use MASNathan\Database4all\Drivers\Sqlite\Sqlite3\Database as Sqlite3Database;
 
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
@@ -49,7 +49,7 @@ $result = $db->query("SELECT * FROM test");
 //dump($data);
 //$data = $result->getAll(Result::FETCH_OBJECT);
 //dump($data);
-//$data = $result->getAll(Result::FETCH_CLASS, 'MASNathan\Object');
-//dump($data);
+$data = $result->getAll(Result::FETCH_CLASS, 'MASNathan\Object');
+dump($data);
 
 dump($result);

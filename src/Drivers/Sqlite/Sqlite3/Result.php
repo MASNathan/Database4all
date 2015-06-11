@@ -9,10 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace MASNathan\Database4all\Sqlite\Drivers;
-use MASNathan\Database4all\Result;
+namespace MASNathan\Database4all\Drivers\Sqlite\Sqlite3;
 
-class Sqlite3Result extends Result
+use MASNathan\Database4all\Result as ResultParent;
+
+class Result extends ResultParent
 {
     public function __construct(\SQLite3Result $dataResult)
     {

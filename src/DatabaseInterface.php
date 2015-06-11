@@ -49,6 +49,12 @@ interface DatabaseInterface
     public function query($sql);
 
     /**
+     * Closes the database connection
+     * @return null
+     */
+    public function close();
+
+    /**
      * Returns the last error code
      * @return string Error code
      */
@@ -64,5 +70,11 @@ interface DatabaseInterface
      * Returns the last inserted ID
      * @return integer Last Inserted ID
      */
-    public function getLastInsertId(); 
+    public function getLastInsertId();
+
+    /**
+     * Returns the connection
+     * @return mixed Can be a PDO object, mysqli, etc...
+     */
+    public function getConnection();
 }

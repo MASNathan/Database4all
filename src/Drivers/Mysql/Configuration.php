@@ -9,7 +9,8 @@
  * file that was distributed with this source code.
  */
 
-namespace MASNathan\Database4all\Mysql;
+namespace MASNathan\Database4all\Drivers\Mysql;
+
 use MASNathan\Database4all\Configuration as ConfigParent;
 
 class Configuration extends ConfigParent

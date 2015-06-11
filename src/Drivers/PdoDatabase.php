@@ -9,31 +9,55 @@
  * file that was distributed with this source code.
  */
 
-namespace MASNathan\Database4all\Mysql\Drivers;
+namespace MASNathan\Database4all\Drivers;
+
 use MASNathan\Database4all\DatabaseInterface;
-use MASNathan\Database4all\Mysql\Configuration;
 
-class PdoDatabase implements DatabaseInterface
+abstract class PdoDatabase implements DatabaseInterface
 {
-
     /**
      * Database holder
-     * @var \PDO
+     * @var mixed
      */
     protected $database;
 
     /**
-     * PDO Database Connection initialization method
-     * @param Configuration $config
+     * Sets a database connection
+     * @param mixed $connection Database connection
      */
-    public function __construct(Configuration $config)
+    protected function setConnection($connectionString, $user = null, $pass = null, $connectioOptions = null)
     {
-        $connectionString = sprintf("mysql:host=%s;dbname=%s", $config->host, $config->name);
-        $connectioOptions = array(\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES ' . $config->charset);
-        $this->database = new \PDO($connectionString, $config->user, $config->pass, $connectioOptions);
+        $pdoConnection  = new \PDO($connectionString, $user, $pass, $connectioOptions);
         /**
          * @todo  Check if connection is ok
          */
+        $this->database = $pdoConnection;
+    }
+
+    /**
+     * Returns the database connection
+     * @return mixed Database connection if any
+     */
+    public function getConnection()
+    {
+        return $this->database;
+    }
+
+    /**
+     * Magic function that is called when the object is destroyed and closes the database connection
+     */
+    public function __destruct()
+    {
+        $this->close();
+    }
+
+    /**
+     * Closes the database connection
+     * @return null
+     */
+    public function close()
+    {
+        $this->database = null;
     }
 
     /**

@@ -9,33 +9,32 @@
  * file that was distributed with this source code.
  */
 
-namespace MASNathan\Database4all\Mysql\Drivers;
-use MASNathan\Database4all\DatabaseInterface;
-use MASNathan\Database4all\Mysql\Configuration;
+namespace MASNathan\Database4all\Drivers\Mysql\Mysqli;
 
-class MysqliDatabase implements DatabaseInterface
+use MASNathan\Database4all\Database as BaseDatabase;
+use MASNathan\Database4all\Drivers\Mysql\Configuration;
+
+class Database extends BaseDatabase
 {
-
-    /**
-     * Database holder
-     * @var \mysqli
-     */
-    protected $database;
-
     /**
      * Mysqli Database Connection initialization method
      * @param Configuration $config
      */
     public function __construct(Configuration $config)
     {
-        $this->database = new \mysqli($config->host, $config->user, $config->pass, $config->name);
+        $mysqliConnection = new \mysqli($config->host, $config->user, $config->pass, $config->name);
         /**
          * @todo  Check if connection is ok
          */
-        $this->database->set_charset($config->charset);
+        $this->setConnection($mysqliConnection);
+        $this->getConnection()->set_charset($config->charset);
     }
 
-    public function __destruct()
+    /**
+     * Closes the database connection
+     * @return null
+     */
+    public function close()
     {
         $this->database->close();
     }
