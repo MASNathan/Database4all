@@ -53,7 +53,7 @@ class Factory
     public static function getDatabase(Configuration $config)
     {
         switch (get_class($config)) {
-            case 'MASNathan\Database4all\Mysql\Configuration':
+            case 'MASNathan\Database4all\Drivers\Mysql\Configuration':
                 if (class_exists('PDO') && in_array('mysql', \PDO::getAvailableDrivers())) {
                     return new MysqlPdoDatabase($config);
                 }
@@ -64,7 +64,7 @@ class Factory
 
                 throw new \Exception("None of the supported drivers for MySQL is installed.");
 
-            case 'MASNathan\Database4all\Sqlite\Configuration':
+            case 'MASNathan\Database4all\Drivers\Sqlite\Configuration':
                 if (class_exists('PDO') && in_array('sqlite', \PDO::getAvailableDrivers())) {
                     return new SqlitePdoDatabase($config);
                 }
